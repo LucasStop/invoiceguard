@@ -6,7 +6,7 @@ Deliverables 1.4 (AI log for the IPO model and the script) and 2.4 (AI log for t
 
 During the preparation of this activity, the group used Claude (Anthropic; Claude Code CLI, model Claude Sonnet 5.5) to draft the first version of the documents, the script and the test runner, to review the IPO model, the script and the decision rule, and to suggest test cases. Every suggestion listed below was read by the group, and what was accepted or rejected is recorded with the reason. The group takes full responsibility for the content submitted.
 
-Review status of this log (to be filled in before submission): author Lucas Stopinski da Silva reviewed it; Eduardo Pereira and Patrick de Oliveira: pending, see "Additions by the other members" at the end.
+Review status of this log: author Lucas Stopinski da Silva reviewed it. Eduardo Pereira and Patrick de Oliveira reviewed the whole project (documents, script, tests and this log) and approved it with Lucas outside the repository, as reported by Lucas on 2026-10-17. They added no prompts of their own, see "Additions by the other members" at the end.
 
 ## How the log was produced
 
@@ -120,8 +120,4 @@ These were implemented as defaults and confirmed by Lucas on 2026-10-14 (no reas
 
 ## Additions by the other members
 
-Eduardo Pereira and Patrick de Oliveira: add your own prompts and decisions below, using the same columns (prompt, AI response, accepted or rejected, why, implementation it led to), and tick that you can explain the script and the table.
-
-| Member | Prompt | AI response (summary) | Decision and why | Implementation it led to |
-|---|---|---|---|---|
-| | | | | |
+Eduardo Pereira and Patrick de Oliveira reviewed the whole project and approved it with Lucas (verbal approval, outside the repository, reported by Lucas on 2026-10-17). They did not run AI prompts of their own, so there are no additional entries. Every AI interaction of this project is the one recorded above.
