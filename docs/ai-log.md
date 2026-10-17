@@ -6,7 +6,7 @@ Deliverables 1.4 (AI log for the IPO model and the script) and 2.4 (AI log for t
 
 During the preparation of this activity, the group used Claude (Anthropic; Claude Code CLI, model Claude Sonnet 5.5) to draft the first version of the documents, the script and the test runner, to review the IPO model, the script and the decision rule, and to suggest test cases. Every suggestion listed below was read by the group, and what was accepted or rejected is recorded with the reason. The group takes full responsibility for the content submitted.
 
-Review status of this log: author Lucas Stopinski da Silva reviewed it. Eduardo Pereira and Patrick de Oliveira reviewed the whole project (documents, script, tests and this log) and approved it with Lucas outside the repository, as reported by Lucas on 2026-10-17. They added no prompts of their own, see "Additions by the other members" at the end.
+Review status of this log: author Lucas Stopinski da Silva reviewed it. Eduardo Pereira and Patrick de Oliveira reviewed the whole project (documents, script, tests and this log) and approved it with Lucas outside the repository, as reported by Lucas on 2026-10-17. According to Lucas, the prompts were written and reviewed by the three members together in one shared session, so there are no separate prompts per member, see "Additions by the other members" at the end.
 
 ## How the log was produced
 
@@ -120,4 +120,4 @@ These were implemented as defaults and confirmed by Lucas on 2026-10-14 (no reas
 
 ## Additions by the other members
 
-Eduardo Pereira and Patrick de Oliveira reviewed the whole project and approved it with Lucas (verbal approval, outside the repository, reported by Lucas on 2026-10-17). They did not run AI prompts of their own, so there are no additional entries. Every AI interaction of this project is the one recorded above.
+Eduardo Pereira and Patrick de Oliveira reviewed the whole project and approved it with Lucas (verbal approval, outside the repository, reported by Lucas on 2026-10-17). According to Lucas, the prompts were not made separately: the three members wrote and reviewed them together in one shared session. There are therefore no additional entries per member, and every AI interaction of this project is the one recorded above.
