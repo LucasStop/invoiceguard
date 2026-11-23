@@ -1,0 +1,2 @@
+invoice_number,supplier,issue_date,currency,subtotal,tax_rate,discount
+INV-X003,Delta Embalagens Ltda,2026-11-05,BRL,1500.00,12.5,0

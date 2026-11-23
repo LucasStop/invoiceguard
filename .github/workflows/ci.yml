@@ -22,3 +22,4 @@ jobs:
         with:
           python-version: "3.12"
       - run: python test_invoiceguard.py
+      - run: python -m unittest discover -s tests
