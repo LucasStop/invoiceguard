@@ -1,10 +1,10 @@
 # InvoiceGuard: AI use log
 
-Deliverables 1.4 (AI log for the IPO model and the script) and 2.4 (AI log for the decision rule and the tests) of the Summative Assessment - LO 1, plus the AI-use declaration.
+Deliverables 1.4 and 2.4 of the Summative Assessment - LO 1 (parts 1 and 2), and 4.4 and 5.4 of the Summative Assessment - LO 2 (parts 3 and 4), plus the AI-use declaration.
 
 ## Declaration of AI use (CONSUN 274/2024)
 
-During the preparation of this activity, the group used Claude (Anthropic; Claude Code CLI, model Claude Sonnet 5.5) to draft the first version of the documents, the script and the test runner, to review the IPO model, the script and the decision rule, and to suggest test cases. Every suggestion listed below was read by the group, and what was accepted or rejected is recorded with the reason. The group takes full responsibility for the content submitted.
+During the preparation of this activity, the group used Claude (Anthropic; Claude Code CLI, model Claude Sonnet 5.5) to draft the first version of the documents, the script and the test runner, to review the IPO model, the script and the decision rule, and to suggest test cases (LO 1); and, for LO 2, to plan the batch workflow, write the modules, the tests and the documents of ST4 and ST5, in Claude Code sessions on 2026-11-22 and 2026-11-23. Every suggestion listed below was read by the group, and what was accepted or rejected is recorded with the reason. The group takes full responsibility for the content submitted.
 
 Review status of this log: author Lucas Stopinski da Silva reviewed it. Eduardo Pereira and Patrick de Oliveira reviewed the whole project (documents, script, tests and this log) and approved it with Lucas outside the repository, as reported by Lucas on 2026-10-17. According to Lucas, the prompts were written and reviewed by the three members together in one shared session, so there are no separate prompts per member, see "Additions by the other members" at the end.
 
@@ -121,3 +121,83 @@ These were implemented as defaults and confirmed by Lucas on 2026-10-14 (no reas
 ## Additions by the other members
 
 Eduardo Pereira and Patrick de Oliveira reviewed the whole project and approved it with Lucas (verbal approval, outside the repository, reported by Lucas on 2026-10-17). According to Lucas, the prompts were not made separately: the three members wrote and reviewed them together in one shared session. There are therefore no additional entries per member, and every AI interaction of this project is the one recorded above.
+
+## Part 3: batch processing, workbook, report and robustness (deliverable 4.4, ST4)
+
+Tool: Claude Code CLI, model Claude Sonnet 5.5. The prompts were written and reviewed by the three members together in one shared session on 2026-11-23, as reported by Lucas, so there is one record for the group. Source of the requirements: the Canvas task "Summative Assessment - LO 2" and its rubric, read on 2026-11-23. The ST3 deliverable is not in this repository, so "reuse of ST3" means reuse of the LO1 validation and a grouping written in the ST3 style; see "Adaptations of the ST3 logic" in the README.
+
+### Prompt E: review of the RA2 plan
+
+Prompt: the plan text prepared in the previous session, with the request "review it and tell us if we can proceed and what we must do". Claude read `docs/plano-ra2.md`, `invoiceguard.py` and `test_invoiceguard.py`.
+
+Relevant response: the plan is coherent and can proceed, with four changes. First, `invoiceguard.py` runs `input()` at module level, so it cannot be imported and "reuse" has to mean rewriting BR-1 to BR-3 as pure functions. Second, the total in BRL must be the total in the invoice currency times the rate, rounded again to cents. Third, the national holiday of 2026-11-20 and the weekend are good data for the date fallback. Fourth, if time runs out, merge `workflow.py` into `run.py`. After reading the Canvas rubric, Claude added: the AI log needs separate ST4 and ST5 records, `source_file` must be in every output, and the workbook must be verified against the CSV.
+
+| Suggestion | Decision | Why | Test or data check | Observed result and limitation |
+|---|---|---|---|---|
+| Rewrite BR-1 to BR-3 as pure functions in `src/rules.py`, leave `invoiceguard.py` untouched | Accepted | The script cannot be imported; the LO1 deliverable must stay as submitted | `tests/test_rules.py` runs the same 18 hand-written LO1 cases against the module | 18 of 18 give the same total and level. Limit: the rule now exists in two places, the script and the module, and a change must be made in both |
+| Add a "level if read as BRL" column | Accepted | It shows what the exchange rate changes, which is the business question | `test_rate_changes_the_level` (USD 1,900.00 x 5.50 = 10,450.00, DIRECTOR APPROVAL against MANAGER REVIEW) | Passes; in the real batch 10 of 15 foreign invoices change level |
+| Merge `workflow.py` into `run.py` if time is short | Rejected for now | There was time, and separate named functions are asked in rubric 5.3 | `tests/test_workflow.py` calls `run()` directly, which is only possible with the split | Kept as two files |
+
+### Prompt F: input validation and error reporting of the batch
+
+Prompt: build `src/loader.py` for two or more CSVs with at least three justified validation rules, where one rejected input stops the whole batch.
+
+Relevant response and decision: five rules (columns present and no extra cells, unique invoice number across the batch, currency in BRL, USD or EUR, ISO date not in the future, LO1 number format with tax rate at most 100). Claude proposed to list every problem of the batch in one error and not to stop at the first.
+
+| Suggestion | Decision | Why | Test or data check | Observed result and limitation |
+|---|---|---|---|---|
+| Report all problems with file and line, then reject the batch | Accepted | The user can fix a file in one pass; the batch still stops as the rubric requires | `test_error_names_every_problem_not_just_the_first` | Three problems of two rows listed together |
+| One invalid-case fixture folder per error | Rejected | Eight small folders for eight one-line files; the cases are written in the test and only the demo fixture `tests/fixtures/invalid_value` stays | the loader tests (10 tests) | Pass. Limit: the other invalid files are not on disk for the audience to open |
+| Use pandas to read the CSVs | Rejected | The `csv` module is enough for the checks, and the DataFrame is needed only after integration | `test_two_valid_files_load_in_one_call_with_source_filenames` | Pass; the amounts stay exact `Decimal` |
+
+### Prompt G: workbook, report and atomic publication
+
+Prompt: write the processed CSV, the workbook with a detail and a summary sheet, the text report, the log, and keep incomplete results apart from completed ones.
+
+| Suggestion | Decision | Why | Test or data check | Observed result and limitation |
+|---|---|---|---|---|
+| Summary by currency and approval level sorted by BRL total, in the style of an ST3 grouping | Accepted | A meaningful metric for the accounts payable user | `test_sheets_are_numeric_formatted_frozen_filtered_and_summary_sorted` (sorted, total 195,519.01) | Pass. Limit: no grand-total row, because it would break the filter and the sort |
+| Reopen the workbook and the CSV and compare counts and totals before publishing | Accepted | The rubric asks to verify the workbook against the processed data | `test_verification_catches_a_changed_value` (one cell changed by 1); break 3 of the mutation table | The change is detected; with the check disabled the test fails |
+| Build in `output/incomplete/<id>` and publish with `os.replace` to `output/runs/<id>` | Accepted | A failed run must not look completed, and earlier runs must survive | tests 5 and 6 in [test-cases-ra2.md](test-cases-ra2.md); break 4 of the mutation table | No partial package in `runs/` in any failure test. Limit: a crash of the machine in the middle of the final rename is not simulated |
+| Write the run status into `latest.txt` | Accepted | The rubric asks how users find the latest run and its status | `test_package_has_every_output_and_latest_says_success`, `test_invalid_input_fails_visibly_and_keeps_earlier_success` | `status`, `mode`, `location` and `last_success` as expected. Limit: the file is read by people, not by another program |
+
+## Part 4: API, integration and workflow (deliverable 5.4, ST5)
+
+### Prompt H: choice and use of the external source
+
+Prompt: find a documented API that answers a question the local invoices cannot (the BRL value of foreign-currency invoices). Claude chose the PTAX of the Banco Central do Brasil in the plan, and called it for real on 2026-11-22 and again on 2026-11-23.
+
+Relevant response: the API needs no key; the currency parameter is `moeda`, not `codigoMoeda` (HTTP 400); weekends and holidays return an empty list; there are five bulletins per business day.
+
+| Suggestion | Decision | Why | Test or data check | Observed result and limitation |
+|---|---|---|---|---|
+| Use the selling rate of the closing bulletin | Accepted as a team assumption, not yet confirmed by Eduardo and Patrick in the repository | The company buys currency to pay the supplier; the rule is stated as an assumption in `docs/source-record.md` | Real response checked by hand: 2026-11-06 USD closing selling rate 5.5013 | Another rate type would change totals; the assumption is in the report as a limitation |
+| One request per currency for the whole date window | Accepted | Two calls instead of one per invoice date | `test_request_has_parameters_and_timeout`; the live run saved the USD and EUR responses in `data/raw` | Pass. Limit: the window is the first invoice date minus 7 days up to the last date |
+| Parse JSON numbers as `Decimal` | Accepted | The rate times the amount must be exact to the cent | `test_keeps_only_closing_bulletins_with_exact_decimal_rates` (5.4935 equals `Decimal("5.4935")`) | Pass |
+| Validate the response before saving it | Accepted | A bad answer must never overwrite the last good one | `test_failed_live_run_does_not_replace_the_saved_response` | Saved file unchanged after an invalid live response |
+| Read a saved response in a second mode | Accepted | The demo must not depend on the network | `test_live_then_saved_gives_the_same_rates` | Same rates in both modes. Limit: if the batch dates move outside the saved window, saved mode fails with a clear message |
+| Check the licence before citing it | Accepted | The rubric asks for use conditions | the dataset page of dadosabertos.bcb.gov.br, read on 2026-11-23, states ODbL | Recorded in `docs/source-record.md`; the text of the licence itself was not read in full |
+
+### Prompt I: integration key, fallback and reconciliation
+
+Prompt: join invoices and rates, say what one row means in each source, define the key, check uniqueness, cardinality and missing matches, and prove counts and totals are preserved.
+
+| Suggestion | Decision | Why | Test or data check | Observed result and limitation |
+|---|---|---|---|---|
+| Key `(currency, rate_date)` where `rate_date` is the issue date or the last business day within 7 days | Accepted | Gives the weekend and holiday cases a rule and keeps the key explicit | `test_weekend_falls_back_to_last_business_day`; real batch: 4 fallback rows (2026-11-02, 11-07, 11-15, 11-20) | Pass. Limit: the 7-day window is a choice |
+| Use `pandas.merge_asof` for the date fallback | Rejected | It hides the window and the key that rubric 5.2 asks to explain; a plain lookup is easier to defend | `test_no_rate_in_window_rejects_with_invoice_numbers` | Invoices with no rate are listed by number |
+| `validate="many_to_one"` on the merge | Accepted as a second safety net | Many invoices share one rate | `test_many_invoices_one_rate_keeps_row_count_and_totals`; break 5 of the mutation table | Pass. The break survived because the explicit duplicate check runs first, so the argument alone is not what stops a duplicate |
+| Compare row count and totals by currency before and after the merge | Accepted | Proves nothing was lost or inflated | the same test plus `SavedRealDataTest` (24 rows before and after) | 24 of 24, totals by currency equal |
+| Tune the sample amounts with the real rates | Accepted | To have invoices that change level and one just under the limit | hand calculation: 1780.00 x 5.6143 = 9,993.454 -> 9,993.45 (INV-B006) | Matches the integrated CSV |
+
+### Prompt J: one command for the workflow
+
+Prompt: connect acquisition, validation, integration and storage in named functions with one documented command.
+
+| Suggestion | Decision | Why | Test or data check | Observed result and limitation |
+|---|---|---|---|---|
+| `python3 run.py --mode live` or `--mode saved`, source mode in the log, the report and the CSV | Accepted | Rubric 5.3 asks to identify the source mode | `test_totals_match_hand_calculation_in_every_output`; `run.log` lines | Mode appears in all three |
+| Run one controlled failure for the demo (`--input tests/fixtures/invalid_value`) | Accepted | Shows the error, the log and the preserved earlier success | run by hand on 2026-11-23: exit code 1, `latest.txt` FAILED, `last_success` unchanged | As expected |
+| Try five deliberate breaks to see whether the tests can fail | Accepted | A suite that never fails proves little | table in [test-cases-ra2.md](test-cases-ra2.md) | Four breaks were caught; one was not (see Prompt I) and is reported |
+
+Remaining limitations of parts 3 and 4: the rate type is a team assumption; the data are fictional; the live API is exercised by hand and not by the automated tests; the two copies of the LO1 rule (script and module) must be changed together.
