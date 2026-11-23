@@ -33,6 +33,7 @@ def fetch_period(currency, start, end, timeout=TIMEOUT_SECONDS, urlopen=urllib.r
         with urlopen(f"{ENDPOINT}?{urllib.parse.urlencode(params)}", timeout=timeout) as response:
             body = response.read().decode("utf-8")
     except urllib.error.HTTPError as error:
+        error.close()
         raise FxError(f"PTAX {currency}: the API answered HTTP {error.code} {error.reason}") from error
     except (urllib.error.URLError, TimeoutError) as error:
         raise FxError(f"PTAX {currency}: request failed or timed out after {timeout}s ({error})") from error
