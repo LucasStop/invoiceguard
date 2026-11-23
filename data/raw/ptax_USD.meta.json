@@ -1,0 +1,17 @@
+{
+  "provider": "Banco Central do Brasil (PTAX, Olinda)",
+  "endpoint": "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaPeriodo(moeda=@moeda,dataInicial=@dataInicial,dataFinalCotacao=@dataFinalCotacao)",
+  "currency": "USD",
+  "parameters": {
+    "@moeda": "'USD'",
+    "@dataInicial": "'10-26-2026'",
+    "@dataFinalCotacao": "'11-19-2026'",
+    "$format": "json",
+    "$select": "cotacaoCompra,cotacaoVenda,dataHoraCotacao,tipoBoletim"
+  },
+  "start": "2026-10-26",
+  "end": "2026-11-19",
+  "acquired_at": "2026-11-23T18:20:46+00:00",
+  "units": "BRL per 1 unit of the foreign currency",
+  "rate_used": "cotacaoVenda of the Fechamento bulletin"
+}
