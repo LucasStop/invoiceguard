@@ -1,10 +1,10 @@
 invoice_number,supplier,issue_date,currency,subtotal,tax_rate,discount
-INV-B001,Brightline Consulting,2026-11-02,USD,320.00,0,0
+INV-B001,Brightline Consulting,2026-11-02,USD,120.00,0,0
 INV-B002,Alpine Werkzeuge AG,2026-11-03,EUR,8800.00,0,0
-INV-B003,Alpine Werkzeuge AG,2026-11-04,EUR,160.00,10,0
+INV-B003,Alpine Werkzeuge AG,2026-11-04,EUR,80.00,10,0
 INV-B004,Delta Embalagens Ltda,2026-11-05,BRL,1500.00,12.5,0
 INV-B005,Brightline Consulting,2026-11-09,USD,1850.00,0,0
-INV-B006,Globex Cloud Inc,2026-11-12,USD,1890.00,0,0
+INV-B006,Globex Cloud Inc,2026-11-12,USD,1780.00,0,0
 INV-B007,Delta Embalagens Ltda,2026-11-14,BRL,7200.00,10,0
 INV-B008,Alpine Werkzeuge AG,2026-11-15,EUR,1500.00,0,0
 INV-B009,Norte Logistica SA,2026-11-18,BRL,80.00,0,0

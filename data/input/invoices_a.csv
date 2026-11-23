@@ -1,7 +1,7 @@
 invoice_number,supplier,issue_date,currency,subtotal,tax_rate,discount
 INV-A001,Alpha Papelaria Ltda,2026-11-03,BRL,450.00,10,0
 INV-A002,Norte Logistica SA,2026-11-04,BRL,9500.00,12,500.00
-INV-A003,Globex Cloud Inc,2026-11-05,USD,180.00,5,0
+INV-A003,Globex Cloud Inc,2026-11-05,USD,90.00,5,0
 INV-A004,Globex Cloud Inc,2026-11-06,USD,1800.00,5,20.00
 INV-A005,Brightline Consulting,2026-11-07,USD,950.00,0,0
 INV-A006,Rhein Maschinen GmbH,2026-11-09,EUR,1700.00,0,0
